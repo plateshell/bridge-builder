@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>涛涛老师的桥梁建造者</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: #333;
+        }
+        #game-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        .info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .info p {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+        button {
+            margin: 10px 5px;
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #bridge {
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M0 80 Q 50 20, 100 80" stroke="%233498db" stroke-width="5" fill="none"/></svg>') repeat-x bottom;
+            background-size: 100px 100px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        #bridge::after {
+            content: "涛涛桥";
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #3498db;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>涛涛老师的桥梁建造者</h1>
+        <div id="bridge"></div>
+        <div class="info">
+            <p>预算: <span id="budget">1000</span> 元</p>
+            <p>目标承重: <span id="target-weight">500</span> 吨</p>
+        </div>
+        <div id="bridge-parts">
+            <button onclick="addPart('steel')">添加钢梁 (200元, +100吨)</button>
+            <button onclick="addPart('concrete')">添加混凝土 (100元, +50吨)</button>
+            <button onclick="addPart('wood')">添加木材 (50元, +20吨)</button>
+        </div>
+        <div class="info">
+            <p>当前承重: <span id="current-weight">0</span> 吨</p>
+            <p>当前成本: <span id="current-cost">0</span> 元</p>
+        </div>
+        <button onclick="testBridge()">测试桥梁</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        let budget = 1000;
+        let targetWeight = 500;
+        let currentWeight = 0;
+        let currentCost = 0;
+
+        const parts = {
+            steel: { cost: 200, weight: 100 },
+            concrete: { cost: 100, weight: 50 },
+            wood: { cost: 50, weight: 20 }
+        };
+
+        function addPart(type) {
+            if (currentCost + parts[type].cost <= budget) {
+                currentWeight += parts[type].weight;
+                currentCost += parts[type].cost;
+                updateDisplay();
+                animateBridge();
+            } else {
+                alert("预算不足!");
+            }
+        }
+
+        function updateDisplay() {
+            document.getElementById("current-weight").textContent = currentWeight;
+            document.getElementById("current-cost").textContent = currentCost;
+        }
+
+        function testBridge() {
+            const result = document.getElementById("result");
+            if (currentWeight >= targetWeight) {
+                result.textContent = "成功! 你的桥梁能承受目标重量。";
+                result.style.backgroundColor = "#2ecc71";
+            } else {
+                result.textContent = "失败! 你的桥梁无法承受目标重量。";
+                result.style.backgroundColor = "#e74c3c";
+            }
+            result.style.color = "white";
+        }
+
+        function animateBridge() {
+            const bridge = document.getElementById("bridge");
+            bridge.style.transform = "scale(1.05)";
+            setTimeout(() => {
+                bridge.style.transform = "scale(1)";
+            }, 200);
+        }
+    </script>
+</body>
+</html>
